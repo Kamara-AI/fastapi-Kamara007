@@ -7,4 +7,12 @@ app = FastAPI()
 #Tell FASTAPI to listen for incoming requests on GET root URL ("/")
 @app.get("/")
 def home ():
-    return {"message": "Hello, FASTAPI!"}
+    return {"name": "Task API",
+    "version":"1.0",
+    "endpoint":"[/tasks]"
+    }
+
+@app.get("/health")
+def health ():
+    return {"status":"healthy"}
+
