@@ -41,33 +41,89 @@ Returns general service metadata.
     "version": "1.0",
     "endpoints": ["/tasks"]
   }
+  ```
 
-GET /healthLiveness check endpoint for load balancers and service orchestration.  Response (200 OK):JSON{
-  "status": "healthy"
-}
-2. Task Resource Management (/tasks)GET /tasksRetrieves the complete list of tasks.  Response (200 OK):JSON[
-  {"id": 1, "title": "do FlyRank assignment", "done": true},
-  {"id": 2, "title": "take Claude subscription", "done": false},
-  {"id": 3, "title": "join Micro1 hackerthon", "done": true}
-]
-GET /tasks/{task_id}Retrieves a single task by its unique integer path parameter.  Response (200 OK):JSON{"id": 2, "title": "take Claude subscription", "done": false}
-Error Response (404 Not Found):JSON{"detail": "Task 99 not found"}
-POST /tasksCreates a new task[cite: 1]. Automatically computes incremental ID assignment and defaults done status to false[cite: 1].Request Body:JSON{
-  "title": "Build production API"
-}
-Response (201 Created):JSON{
-  "id": 4,
-  "title": "Build production API",
-  "done": false
-}
-Validation Error (400 Bad Request - Blank/Whitespace Title):JSON{"detail": "Title cannot be empty or blank spaces"}
-PUT /tasks/{task_id}Updates an existing task[cite: 1]. Accepts partial updates for title or done fields via optional payload definitions[cite: 1].Request Body (Updating status):JSON{
-  "done": true
-}
-Response (200 OK):JSON{
-  "id": 2,
-  "title": "take Claude subscription",
-  "done": true
-}
-Error Response (404 Not Found):JSON{"detail": "Task 99 not found"}
-DELETE /tasks/{task_id}Removes a task from the state store by ID[cite: 1].Response (204 No Content): Empty payload body[cite: 1]Error Response (404 Not Found):JSON{"detail": "Task 99 not found"}
+#### `GET /health`
+Liveness check endpoint for load balancers and service orchestration.
+* **Response (200 OK):**
+  ```json
+  {
+    "status": "healthy"
+  }
+  ```
+
+---
+
+### 2. Task Resource Management (`/tasks`)
+
+#### `GET /tasks`
+Retrieves the complete list of tasks.
+* **Response (200 OK):**
+  ```json
+  [
+    {"id": 1, "title": "do FlyRank assignment", "done": true},
+    {"id": 2, "title": "take Claude subscription", "done": false},
+    {"id": 3, "title": "join Micro1 hackerthon", "done": true}
+  ]
+  ```
+
+#### `GET /tasks/{task_id}`
+Retrieves a single task by its unique integer path parameter.
+* **Response (200 OK):**
+  ```json
+  {"id": 2, "title": "take Claude subscription", "done": false}
+  ```
+* **Error Response (404 Not Found):**
+  ```json
+  {"detail": "Task 99 not found"}
+  ```
+
+#### `POST /tasks`
+Creates a new task. Automatically computes incremental ID assignment and defaults `done` status to `false`.
+* **Request Body:**
+  ```json
+  {
+    "title": "Build production API"
+  }
+  ```
+* **Response (201 Created):**
+  ```json
+  {
+    "id": 4,
+    "title": "Build production API",
+    "done": false
+  }
+  ```
+* **Validation Error (400 Bad Request — Blank/Whitespace Title):**
+  ```json
+  {"detail": "Title cannot be empty or blank spaces"}
+  ```
+
+#### `PUT /tasks/{task_id}`
+Updates an existing task. Accepts partial updates for `title` or `done` fields via optional payload definitions.
+* **Request Body (Updating status):**
+  ```json
+  {
+    "done": true
+  }
+  ```
+* **Response (200 OK):**
+  ```json
+  {
+    "id": 2,
+    "title": "take Claude subscription",
+    "done": true
+  }
+  ```
+* **Error Response (404 Not Found):**
+  ```json
+  {"detail": "Task 99 not found"}
+  ```
+
+#### `DELETE /tasks/{task_id}`
+Removes a task from the state store by ID.
+* **Response (204 No Content):** Empty payload body
+* **Error Response (404 Not Found):**
+  ```json
+  {"detail": "Task 99 not found"}
+  ```
